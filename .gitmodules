@@ -1,0 +1,3 @@
+[submodule "factory_girl"]
+	path = factory_girl
+	url = https://github.com/thoughtbot/factory_girl.git
