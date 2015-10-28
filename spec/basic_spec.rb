@@ -1,12 +1,11 @@
 require 'opal-factory_girl'
 
 class User
-  attr_accessor :first_name
+  attr_reader :first_name
 
-  # def initialize(hash)
-  #   `debugger`
-  #   @first_name = hash[:first_name]
-  # end
+  def initialize(first_name:)
+    @first_name = first_name
+  end
 end
 
 describe '42' do
@@ -14,6 +13,8 @@ describe '42' do
     FactoryGirl.define do
       factory :user do
         first_name 'Joe'
+
+        initialize_with { new(first_name: first_name) }
       end
     end
   end
