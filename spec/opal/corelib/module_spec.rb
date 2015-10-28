@@ -44,6 +44,64 @@ describe Module do
       it { is_expected.to eq 42 }
     end
 
+    context 'inherited instance variable' do
+      let(:base_klass) {
+        Class.new do
+          def initialize(something)
+            @something = something
+          end
+        end
+      }
+
+      let(:delegator_klass) do
+        bk = base_klass
+        Class.new(bk) do
+          delegate :foo, to: :@something
+        end
+      end
+
+      let(:delegatee_klass) do
+        Struct.new(:foo)
+      end
+
+      let(:delegatee_instance) { delegatee_klass.new 42 }
+      let(:delegator_instance) { delegator_klass.new(delegatee_instance) }
+
+      subject { delegator_instance.foo }
+
+      it { is_expected.to eq 42 }
+    end
+
+    context 'inherited method' do
+      let(:base_klass) {
+        Class.new do
+          attr_reader :something
+
+          def initialize(something)
+            @something = something
+          end
+        end
+      }
+
+      let(:delegator_klass) do
+        bk = base_klass
+        Class.new(bk) do
+          delegate :foo, to: :something
+        end
+      end
+
+      let(:delegatee_klass) do
+        Struct.new(:foo)
+      end
+
+      let(:delegatee_instance) { delegatee_klass.new 42 }
+      let(:delegator_instance) { delegator_klass.new(delegatee_instance) }
+
+      subject { delegator_instance.foo }
+
+      it { is_expected.to eq 42 }
+    end
+
     context 'singleton class' do
       let(:delegator_klass) do
         Class.new do
