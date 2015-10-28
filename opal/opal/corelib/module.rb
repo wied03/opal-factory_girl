@@ -28,7 +28,7 @@ class Module
       has_block = (method =~ /[^\]]=$/) ? false : true
       method_name = method_prefix + method
       resolve_to = lambda do |scope|
-        to.start_with?('@') ? scope.instance_variable_get(to) : scope.send(to)
+        to.start_with?('@') ? scope.instance_variable_get(to) : scope.__send__(to)
       end
       exception = lambda do |scope|
         DelegationError.new("#{scope}#{method_name} delegated to #{to}.#{method} but #{to} is nil: #{scope.inspect}", method_name)
@@ -40,7 +40,7 @@ class Module
             next if allow_nil
             raise exception[self]
           end
-          to_resolved.send(method, *args, &block)
+          to_resolved.__send__(method, *args, &block)
         end
       else
         define_method(method_name) do |arg|
@@ -49,7 +49,7 @@ class Module
             next if allow_nil
             raise exception[self]
           end
-          to_resolved.send(method, arg)
+          to_resolved.__send__(method, arg)
         end
       end
     end

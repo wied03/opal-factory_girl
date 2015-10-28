@@ -204,5 +204,32 @@ describe Module do
 
       it { is_expected.to be_nil }
     end
+
+    context 'method_missing defined on delegator' do
+      let(:delegator_klass) do
+        Struct.new(:something) do
+          def method_missing(name, *args, &block)
+            raise 'should not end up here'
+          end
+
+          delegate :foo, to: :something
+        end
+      end
+
+      let(:delegatee_klass) do
+        Struct.new(:foo)
+      end
+
+      let(:delegatee_instance) { delegatee_klass.new 42 }
+      let(:delegator_instance) { delegator_klass.new(delegatee_instance) }
+
+      subject { delegator_instance.foo }
+
+      it { is_expected.to eq 42 }
+    end
+
+    context 'send redefined on delegator' do
+      pending 'write this'
+    end
   end
 end

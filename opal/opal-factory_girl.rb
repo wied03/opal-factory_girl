@@ -83,3 +83,17 @@ module ThreadSafe
     end
   end
 end
+
+module FactoryGirl
+  class Decorator
+    class NewConstructor < Decorator
+      def build_class_accessor
+        @build_class
+      end
+
+      # For some reason, the instance_variable_get was not working
+      #delegate :new, to: :@build_class
+      delegate :new, to: :build_class_accessor
+    end
+  end
+end
