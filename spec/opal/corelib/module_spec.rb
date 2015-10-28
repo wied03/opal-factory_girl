@@ -82,18 +82,28 @@ describe Module do
       it { is_expected.to eq 42 }
     end
 
+    context 'nil method' do
+      let(:delegator_klass) do
+        Struct.new(:something) do
+          delegate :foo, to: :something
+        end
+      end
+
+      let(:delegator_instance) { delegator_klass.new(nil) }
+
+      subject { lambda { delegator_instance.foo } }
+
+      it { is_expected.to raise_error DelegationError, 'foo' }
+    end
+
     xcontext 'allow nil' do
       let(:delegator_klass) do
-        Class.new do
-          def something
-            nil
-          end
-
+        Struct.new(:something) do
           delegate :foo, to: :something, allow_nil: true
         end
       end
 
-      let(:delegator_instance) { delegator_klass.new }
+      let(:delegator_instance) { delegator_klass.new(nil) }
 
       subject { delegator_instance.foo }
 

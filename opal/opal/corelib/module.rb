@@ -60,7 +60,9 @@ class Module
             " _ = #{to}",
             "  _.#{method}(#{definition})",
             "rescue NoMethodError => e",
-            "  if _.nil? && e.name == :#{method}",
+            # Opal doesn't have #name yet - https://github.com/opal/opal/pull/1172
+            # "  if _.nil? && e.name == :#{method}",
+            "  if _.nil? && Regexp.new(\"method `(.*)'\").match(e.message).captures.first == :#{method}",
             "    #{exception}",
             "  else",
             "    raise",
