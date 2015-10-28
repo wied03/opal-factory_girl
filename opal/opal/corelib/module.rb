@@ -1,15 +1,6 @@
-require 'opal-parser'
-
 class Module
   class DelegationError < NoMethodError;
   end
-
-  DELEGATION_RESERVED_METHOD_NAMES = Set.new(
-      %w(_ arg args alias and BEGIN begin block break case class def defined? do
-         else elsif END end ensure false for if in module next nil not or redo
-         rescue retry return self super then true undef unless until when while
-         yield)
-  )
 
   def delegate(*methods)
     options = methods.pop
@@ -28,50 +19,33 @@ class Module
                     else
                       ''
                     end
+
     to = to.to_s
-    to = "self.#{to}" if DELEGATION_RESERVED_METHOD_NAMES.include?(to)
 
     methods.each do |method|
       # Attribute writer methods only accept one argument. Makes sure []=
       # methods still accept two arguments.
-      definition = (method =~ /[^\]]=$/) ? 'arg' : '*args, &block'
-
-      # The following generated method calls the target exactly once, storing
-      # the returned value in a dummy variable.
-      #
-      # Reason is twofold: On one hand doing less calls is in general better.
-      # On the other hand it could be that the target has side-effects,
-      # whereas conceptually, from the user point of view, the delegator should
-      # be doing one call.
-      if allow_nil
-        method_def = [
-            "def #{method_prefix}#{method}(#{definition})",
-            "_ = #{to}",
-            "if !_.nil? || nil.respond_to?(:#{method})",
-            "  _.#{method}(#{definition})",
-            "end",
-            "end"
-        ].join ';'
+      has_block = (method =~ /[^\]]=$/) ? false : true
+      method_name = method_prefix + method
+      if has_block
+        define_method(method_name) do |*args, &block|
+          to_resolved = self.send(to)
+          unless to_resolved
+            next if allow_nil
+            raise DelegationError, "#{self}#{method_name} delegated to #{to}.#{method} but #{to} is nil: #{self.inspect}"
+          end
+          to_resolved.send(method, *args, &block)
+        end
       else
-        exception = %(raise DelegationError, "#{self}##{method_prefix}#{method} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
-
-        method_def = [
-            "def #{method_prefix}#{method}(#{definition})",
-            " _ = #{to}",
-            "  _.#{method}(#{definition})",
-            "rescue NoMethodError => e",
-            # Opal doesn't have #name yet - https://github.com/opal/opal/pull/1172
-            # "  if _.nil? && e.name == :#{method}",
-            "  if _.nil? && Regexp.new(\"method `(.*)'\").match(e.message).captures.first == :#{method}",
-            "    #{exception}",
-            "  else",
-            "    raise",
-            "  end",
-            "end"
-        ].join ';'
+        define_method(method_name) do |arg|
+          to_resolved = self.send(to)
+          unless to_resolved
+            next if allow_nil
+            raise DelegationError, "#{self}#{method_name} delegated to #{to}.#{method} but #{to} is nil: #{self.inspect}"
+          end
+          to_resolved.send(method, arg)
+        end
       end
-
-      eval(method_def)
     end
   end
 end

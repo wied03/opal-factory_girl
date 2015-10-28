@@ -21,6 +21,24 @@ describe Module do
       it { is_expected.to eq 42 }
     end
 
+    context 'singleton class' do
+      let(:delegator_klass) do
+        Class.new do
+          def self.config
+            'foobar'
+          end
+
+          class << self
+            delegate :length, to: :config
+          end
+        end
+      end
+
+      subject { delegator_klass.length }
+
+      it { is_expected.to eq 6 }
+    end
+
     context 'multiple calls' do
       let(:delegator_klass) do
         Struct.new(:something, :else) do
@@ -37,10 +55,8 @@ describe Module do
       let(:delegatee_instance2) { delegatee_klass.new 44, 45 }
       let(:delegator_instance) { delegator_klass.new(delegatee_instance1, delegatee_instance2) }
 
-      subject { delegator_instance }
-
-      it { is_expected.to have_attributes foo: 42,
-                                          bar: 45 }
+      it { expect(delegator_instance.foo).to eq 42 }
+      it { expect(delegator_instance.bar).to eq 45 }
     end
 
     context 'multiple at once' do
@@ -57,10 +73,8 @@ describe Module do
       let(:delegatee_instance) { delegatee_klass.new 42, 43 }
       let(:delegator_instance) { delegator_klass.new(delegatee_instance) }
 
-      subject { delegator_instance }
-
-      it { is_expected.to have_attributes foo: 42,
-                                          bar: 43 }
+      it { expect(delegator_instance.foo).to eq 42 }
+      it { expect(delegator_instance.bar).to eq 43 }
     end
 
     context 'prefixes' do
@@ -93,10 +107,10 @@ describe Module do
 
       subject { lambda { delegator_instance.foo } }
 
-      it { is_expected.to raise_error DelegationError, 'foo' }
+      it { is_expected.to raise_error DelegationError }
     end
 
-    xcontext 'allow nil' do
+    context 'allow nil' do
       let(:delegator_klass) do
         Struct.new(:something) do
           delegate :foo, to: :something, allow_nil: true
