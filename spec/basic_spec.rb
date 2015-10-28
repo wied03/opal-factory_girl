@@ -1,5 +1,3 @@
-require 'opal-factory_girl'
-
 class User
   attr_reader :first_name
 
