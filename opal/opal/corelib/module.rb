@@ -27,21 +27,27 @@ class Module
       # methods still accept two arguments.
       has_block = (method =~ /[^\]]=$/) ? false : true
       method_name = method_prefix + method
+      resolve_to = lambda do |scope|
+        to.start_with?('@') ? scope.instance_variable_get(to) : scope.send(to)
+      end
+      exception = lambda do |scope|
+        DelegationError.new("#{scope}#{method_name} delegated to #{to}.#{method} but #{to} is nil: #{scope.inspect}", method_name)
+      end
       if has_block
         define_method(method_name) do |*args, &block|
-          to_resolved = self.send(to)
+          to_resolved = resolve_to[self]
           unless to_resolved
             next if allow_nil
-            raise DelegationError, "#{self}#{method_name} delegated to #{to}.#{method} but #{to} is nil: #{self.inspect}"
+            raise exception[self]
           end
           to_resolved.send(method, *args, &block)
         end
       else
         define_method(method_name) do |arg|
-          to_resolved = self.send(to)
+          to_resolved = resolve_to[self]
           unless to_resolved
             next if allow_nil
-            raise DelegationError, "#{self}#{method_name} delegated to #{to}.#{method} but #{to} is nil: #{self.inspect}"
+            raise exception[self]
           end
           to_resolved.send(method, arg)
         end
