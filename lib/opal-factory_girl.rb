@@ -8,7 +8,8 @@
     'active_support/deprecation',
     'active_support/core_ext/module/delegation',
     'active_support/notifications',
-    'active_support/core_ext/hash/keys'
+    'active_support/core_ext/hash/keys',
+    'active_support/core_ext/hash/except'
 ].each { |r| Opal::Processor.stub_file r }
 
 
