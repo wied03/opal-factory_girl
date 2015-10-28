@@ -5,11 +5,7 @@
     'atomic',
     'jruby',
     'logger',
-    'active_support/deprecation',
-    'active_support/core_ext/module/delegation',
-    'active_support/notifications',
-    'active_support/core_ext/hash/keys',
-    'active_support/core_ext/hash/except'
+    'active_support/core_ext/module/delegation' # this doesn't work, we have our own impl
 ].each { |r| Opal::Processor.stub_file r }
 
 
@@ -17,3 +13,4 @@
 Opal.append_path File.expand_path('../../opal', __FILE__)
 Opal.append_path File.expand_path('../../factory_girl/lib', __FILE__)
 require 'opal-activesupport'
+Opal.use_gem 'activesupport'
