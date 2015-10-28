@@ -7,3 +7,8 @@ RSpec.configure do |config|
     FactoryGirl.reload
   end
 end
+
+# deprecated, FG specs use rspec2
+def share_examples_for(name, &block)
+  RSpec.shared_context(name, &block)
+end

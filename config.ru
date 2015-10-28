@@ -11,6 +11,7 @@ require 'opal-factory_girl'
     'aruba/cucumber'
 ].each { |r| Opal::Processor.stub_file r }
 Opal.use_gem 'mocha'
+Opal.use_gem 'rspec-its'
 files = FileList['spec/basic_requires.rb',
                  'factory_girl/spec/support/**/*.rb',
                  'spec/spec_helper_opal.rb',
