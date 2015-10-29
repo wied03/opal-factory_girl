@@ -120,3 +120,33 @@ module FactoryGirl
     end
   end
 end
+
+
+module FactoryGirl
+  class AttributeAssigner
+    def instance_builder_set(&instance_builder)
+      @instance_builder = instance_builder
+    end
+  end
+
+  # @api private
+  class Factory
+    def run(build_strategy, overrides, &block)
+      block ||= ->(result) { result }
+      compile
+
+      strategy = StrategyCalculator.new(build_strategy).strategy.new
+
+      evaluator = evaluator_class.new(strategy, overrides.symbolize_keys)
+      constr = compiled_constructor
+      attribute_assigner = AttributeAssigner.new(evaluator, build_class, &constr)
+      # Opal issues with passing a block reference in a constructor
+      attribute_assigner.instance_builder_set(&constr)
+
+      evaluation = Evaluation.new(attribute_assigner, compiled_to_create)
+      evaluation.add_observer(CallbacksObserver.new(callbacks, evaluator))
+
+      strategy.result(evaluation).tap(&block)
+    end
+  end
+end
