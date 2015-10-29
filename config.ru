@@ -8,7 +8,8 @@ require 'opal-factory_girl'
     # 'timecop',
     'spec_helper',
     'active_record',
-    'aruba/cucumber'
+    'aruba/cucumber',
+    'mocha/object' # we have api/ but sprockets will catch this in rspec adapter
 ].each { |r| Opal::Processor.stub_file r }
 Opal.use_gem 'mocha'
 Opal.use_gem 'rspec-its'
