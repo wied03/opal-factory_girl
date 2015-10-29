@@ -67,3 +67,8 @@ module ActiveRecord
   end
 end
 
+module Timecop
+  def self.freeze(*)
+  end
+end
+
