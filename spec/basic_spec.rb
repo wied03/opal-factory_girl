@@ -15,7 +15,7 @@ describe '42' do
     FactoryGirl.define do
       factory :basic_fg_spec, class: BasicFgSpec do
         skip_create
-        
+
         first_name 'Joe'
 
         initialize_with { new(first_name: first_name) }
@@ -23,6 +23,7 @@ describe '42' do
 
       factory :other, class: OtherFgSpec do
         basic_fg_spec
+        after(:build) { puts 'howdy' }
       end
     end
   end
