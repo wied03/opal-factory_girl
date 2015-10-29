@@ -44,6 +44,13 @@ module ActiveRecord
     def self.table_name
       self.name
     end
+
+    def self.belongs_to(item)
+      attr_accessor item
+    end
+
+    def save!
+    end
   end
 end
 
