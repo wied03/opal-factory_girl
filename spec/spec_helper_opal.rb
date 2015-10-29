@@ -1,3 +1,9 @@
+module DefineConstantMacros
+  # no tables here
+  def create_table(table_name, &block)
+  end
+end
+
 RSpec.configure do |config|
   config.mock_framework = :mocha
 
@@ -15,8 +21,13 @@ end
 
 # Can't support activerecord in Opal
 module ActiveRecord
-  module Base
+  class Base
     def self.establish_connection(*)
+    end
+
+    def self.table_name
+      self.name
     end
   end
 end
+

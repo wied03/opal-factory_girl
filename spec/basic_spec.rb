@@ -1,4 +1,4 @@
-class User
+class BasicFgSpec
   attr_reader :first_name
 
   def initialize(first_name:)
@@ -9,7 +9,7 @@ end
 describe '42' do
   before do
     FactoryGirl.define do
-      factory :user do
+      factory :basic_fg_spec, class: BasicFgSpec do
         first_name 'Joe'
 
         initialize_with { new(first_name: first_name) }
@@ -17,7 +17,7 @@ describe '42' do
     end
   end
 
-  subject { FactoryGirl.build(:user).first_name }
+  subject { FactoryGirl.build(:basic_fg_spec).first_name }
 
   it { is_expected.to eq 'Joe' }
 end
