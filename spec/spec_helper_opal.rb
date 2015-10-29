@@ -60,6 +60,10 @@ module ActiveRecord
 
     def save!
     end
+
+    def [](item)
+      self.send(item)
+    end
   end
 end
 
