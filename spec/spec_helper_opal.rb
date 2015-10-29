@@ -38,6 +38,8 @@ end
 # Can't support activerecord in Opal
 module ActiveRecord
   class Base
+    attr_accessor :id
+
     def self.establish_connection(*)
     end
 
@@ -47,6 +49,14 @@ module ActiveRecord
 
     def self.belongs_to(item)
       attr_accessor item
+    end
+
+    def self.has_many(items)
+      attr_accessor items
+    end
+
+    def new_record?
+      id == nil
     end
 
     def save!
