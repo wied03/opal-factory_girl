@@ -7,7 +7,6 @@ module DefineConstantMacros
     model = define_class(name, ActiveRecord::Base, &block)
     model.class_eval do
       columns.each do |column_name, _|
-        puts "adding #{column_name} to #{model}"
         attr_accessor column_name
       end
     end

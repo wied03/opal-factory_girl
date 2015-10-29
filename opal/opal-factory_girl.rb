@@ -8,6 +8,29 @@ end
 
 require 'active_support/core_ext/string'
 require 'active_support/inflector'
+require 'active_support/notifications/fanout'
+
+module ActiveSupport
+  module Notifications
+    # This is a default queue implementation that ships with Notifications.
+    # It just pushes events to all registered log subscribers.
+    #
+    # This class is thread safe. All methods are reentrant.
+    class Fanout
+      #def subscribe(pattern = nil, block = Proc.new)
+      # Opal doesn't like block without &block and Proc.new isn't valid anyways
+      def subscribe(pattern = nil, &block)
+        subscriber = Subscribers.new pattern, block
+        synchronize do
+          @subscribers << subscriber
+          @listeners_for.clear
+        end
+        subscriber
+      end
+    end
+  end
+end
+
 require 'factory_girl'
 
 # Opal didn't seem like like synchronize { super }, so removed sync, probably super w/ args inside a block
