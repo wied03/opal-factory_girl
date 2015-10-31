@@ -13,11 +13,13 @@ require 'opal-factory_girl'
 ].each { |r| Opal::Processor.stub_file r }
 Opal.use_gem 'mocha'
 Opal.use_gem 'rspec-its'
-files = FileList['spec/basic_requires.rb',
-                 'factory_girl/spec/support/**/*.rb',
-                 'spec/spec_helper_opal.rb',
-                 'spec/**/*_spec.rb',
-                 'factory_girl/spec/**/*_spec.rb']
+files = FileList[
+    'spec/basic_requires.rb',
+    'factory_girl/spec/support/**/*.rb',
+    'spec/spec_helper_opal.rb',
+    'spec/**/*_spec.rb',
+    'factory_girl/spec/**/*_spec.rb'
+]
 puts "Files are #{files}"
 sprockets_env = Opal::RSpec::SprocketsEnvironment.new(spec_pattern=nil, exclude_pattern=nil, files=files)
 run Opal::Server.new(sprockets: sprockets_env) { |s|

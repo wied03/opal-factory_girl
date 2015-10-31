@@ -151,7 +151,10 @@ module ActiveSupport
     #   titleize('TheManWithoutAPast')       # => "The Man Without A Past"
     #   titleize('raiders_of_the_lost_ark')  # => "Raiders Of The Lost Ark"
     def titleize(word)
-      humanize(underscore(word)).gsub(/\b(?<!['’`])[a-z]/) { |match| match.capitalize }
+      # negative lookbehind doesn't work in Firefox / Safari
+      # humanize(underscore(word)).gsub(/\b(?<!['’`])[a-z]/) { |match| match.capitalize }
+      humanized = humanize(underscore(word))
+      humanized.reverse.gsub(/[a-z](?!['’`])\b/) { |match| match.capitalize }.reverse
     end
 
     # Creates the name of a table like Rails does for models to table names.
@@ -265,7 +268,7 @@ module ActiveSupport
           # Go down the ancestors to check if it is owned directly. The check
           # stops when we reach Object or the end of ancestors tree.
           constant = constant.ancestors.inject do |const, ancestor|
-            break const    if ancestor == Object
+            break const if ancestor == Object
             break ancestor if ancestor.const_defined?(name, false)
             const
           end
@@ -302,7 +305,7 @@ module ActiveSupport
       constantize(camel_cased_word)
     rescue NameError => e
       raise if e.name && !(camel_cased_word.to_s.split("::").include?(e.name.to_s) ||
-        e.name.to_s == camel_cased_word.to_s)
+          e.name.to_s == camel_cased_word.to_s)
     rescue ArgumentError => e
       raise unless e.message =~ /not missing constant #{const_regexp(camel_cased_word)}\!$/
     end
@@ -323,10 +326,14 @@ module ActiveSupport
         "th"
       else
         case abs_number % 10
-          when 1; "st"
-          when 2; "nd"
-          when 3; "rd"
-          else    "th"
+          when 1;
+            "st"
+          when 2;
+            "nd"
+          when 3;
+            "rd"
+          else
+            "th"
         end
       end
     end
@@ -356,7 +363,7 @@ module ActiveSupport
 
       return Regexp.escape(camel_cased_word) if parts.blank?
 
-      last  = parts.pop
+      last = parts.pop
 
       parts.reverse.inject(last) do |acc, part|
         part.empty? ? acc : "#{part}(::#{acc})?"
