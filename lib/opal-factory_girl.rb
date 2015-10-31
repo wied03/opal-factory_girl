@@ -5,6 +5,7 @@
     'atomic',
     'jruby',
     'logger',
+    'active_support/inflector/methods', # has an incompatible regex in it
     'active_support/core_ext/module/delegation' # this doesn't work, we have our own impl
 ].each { |r| Opal::Processor.stub_file r }
 
