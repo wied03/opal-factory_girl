@@ -1,6 +1,6 @@
 # opal-factory-girl
 
-[![Build Status](http://img.shields.io/travis/wied03/opal-factory-girl/master.svg?style=flat)](http://travis-ci.org/wied03/opal-factory-girl)
+[![Build Status](http://img.shields.io/travis/wied03/opal-factory_girl/master.svg?style=flat)](http://travis-ci.org/wied03/opal-factory_girl)
 
 Get [Factory Girl](https://github.com/thoughtbot/factory_girl/) working on Opal (sans ActiveRecord support). Still a work in progress.
 
