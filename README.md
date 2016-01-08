@@ -6,19 +6,46 @@ Get [Factory Girl](https://github.com/thoughtbot/factory_girl/) working on Opal 
 
 ## Usage
 
-Add `opal-factory-girl` to your Gemfile:
+Add `opal-factory_girl` to your Gemfile:
 
 ```ruby
-gem 'opal-factory-girl'
+gem 'opal-factory_girl'
 ```
 
 ### Use in your application
 
-Same as normal FactoryGirl, except no ActiveRecord support. This is mainly useful for assembling test view models/client side classes
+Similar to normal FactoryGirl. This is mainly useful for assembling test view models/client side classes.
+
+In your `spec_helper.rb` or equivalent file, add:
+
+```ruby
+require 'opal-factory_girl'
+
+RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+end
+```
+
+Then for each factory file, do something like this:
+
+```ruby
+FactoryGirl.define do
+  factory :currency_vm do
+    skip_create # No persistence right now (see limitations)
+
+    code 'USD'
+    separator ','
+    delimiter '.'
+    symbol '$'
+  end
+end
+```
+
+You will need to `require` all of your factory files before using the factories in tests.
 
 ## Limitations:
 
-* No AR (thus no create strategy)
+* ActiveRecord support is not yet tested (thus you can't use the create strategy)
 
 ## Contributing
 
