@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('lib/**/*.rb') + Dir.glob('opal/**/*.rb') + Dir.glob('factory_girl/lib/**/*.rb')
 
   s.add_runtime_dependency 'activesupport'
-  s.add_runtime_dependency 'opal-activesupport'
+  s.add_runtime_dependency 'opal-activesupport', '~> 0.3'
   s.add_runtime_dependency 'opal', '>= 0.9.0.beta1'
 
   s.require_paths = ['lib']

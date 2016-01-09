@@ -1,11 +1,10 @@
-require 'opal/corelib/module'
-
 module Mutex_m
   def synchronize
     yield
   end
 end
 
+require 'active_support/core_ext/module/delegation'
 require 'active_support/inflector'
 require 'opal/active_support/inflector/methods'
 require 'active_support/core_ext/string/inflections'
