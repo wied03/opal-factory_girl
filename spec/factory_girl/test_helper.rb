@@ -15,10 +15,10 @@ module TestHelper
       'mocha/object' # we have api/ but sprockets will catch this in rspec adapter
     ].each { |r| Opal::Processor.stub_file r }
     FileList[
-      'spec/basic_requires.rb',
+      'spec/factory_girl/basic_requires.rb',
       'factory_girl/spec/support/**/*.rb',
-      'spec/spec_helper_opal.rb',
-      'spec/**/*_spec.rb',
+      'spec/factory_girl/spec_helper_opal.rb',
+      'spec/factory_girl/**/*_spec.rb',
       'factory_girl/spec/**/*_spec.rb'
     ]
   end
