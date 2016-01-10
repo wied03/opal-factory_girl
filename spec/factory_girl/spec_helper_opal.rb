@@ -21,6 +21,11 @@ module DefineConstantMacros
   end
 end
 
+# Mocha uses protected methods
+module Kernel
+  alias protected_methods methods
+end
+
 RSpec.configure do |config|
   config.mock_framework = :mocha
 
