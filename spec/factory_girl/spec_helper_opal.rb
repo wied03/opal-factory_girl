@@ -1,3 +1,5 @@
+require 'progress_json_formatter'
+
 module DefineConstantMacros
   # no tables here
   def create_table(table_name, &block)
