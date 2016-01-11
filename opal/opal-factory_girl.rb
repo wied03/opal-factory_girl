@@ -11,6 +11,37 @@ require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/string'
 require 'active_support/notifications/fanout'
 
+class String
+  def humanize
+    ActiveSupport::Inflector.humanize(self)
+  end
+end
+
+class ActiveSupport::Inflector::Inflections
+  def humans
+    @humans ||= []
+  end
+
+  def acronyms
+    @acronyms ||= {}
+  end
+
+  def acronym_regex
+    @acronym_regex ||= /(?=a)b/
+  end
+
+  def human(rule, replacement)
+    @humans.prepend([rule, replacement])
+  end
+
+  def acronym(word)
+    a = acronyms
+    _ = acronym_regex
+    a[word.downcase] = word
+    @acronym_regex = /#{a.values.join("|")}/
+  end
+end
+
 module ActiveSupport
   module Notifications
     # This is a default queue implementation that ships with Notifications.

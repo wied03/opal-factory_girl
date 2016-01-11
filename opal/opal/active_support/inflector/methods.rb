@@ -123,18 +123,25 @@ module ActiveSupport
     def humanize(lower_case_and_underscored_word, options = {})
       result = lower_case_and_underscored_word.to_s.dup
 
-      inflections.humans.each { |(rule, replacement)| break if result.sub!(rule, replacement) }
+      # no humans attr exists on inflections, need to port that over
 
-      result.sub!(/\A_+/, ''.freeze)
-      result.sub!(/_id\z/, ''.freeze)
-      result.tr!('_'.freeze, ' '.freeze)
+      # opal - string mutation
+      inflections.humans.each { |(rule, replacement)| break if (result = result.sub(rule, replacement)) }
 
-      result.gsub!(/([a-z\d]*)/i) do |match|
+      # opal - \A and \z not supported
+      #result = result.sub(/\A_+/, ''.freeze)
+      result = result.sub(/^_+/, ''.freeze)
+      #result = result.sub(/_id\z/, ''.freeze)
+      result = result.sub(/_id$/, ''.freeze)
+      result = result.tr('_'.freeze, ' '.freeze)
+
+      result = result.gsub(/([a-z\d]*)/i) do |match|
         "#{inflections.acronyms[match] || match.downcase}"
       end
 
       if options.fetch(:capitalize, true)
-        result.sub!(/\A\w/) { |match| match.upcase }
+        #result = result.sub(/\A\w/) { |match| match.upcase }
+        result = result.sub(/^\w/) { |match| match.upcase }
       end
 
       result
