@@ -15,9 +15,13 @@ module DefineConstantMacros
         attr_accessor column_name
       end
 
+      def write_attribute(attr, value)
+        self.instance_variable_set("@#{attr}".to_sym, value)
+      end
+
       def initialize(attr_hash={})
         attr_hash.each do |k, v|
-          self.instance_variable_set("@#{k}".to_sym, v)
+          write_attribute k, v
         end
       end
     end
