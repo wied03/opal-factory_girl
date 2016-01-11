@@ -25,35 +25,38 @@ end
 module Kernel
   alias protected_methods methods
 end
-#
-# class Mocha::ClassMethod
-#   def define_new_method
-#     # definition_target.class_eval(<<-CODE, __FILE__, __LINE__ + 1)
-#     #         def #{method}(*args, &block)
-#     #           mocha.method_missing(:#{method}, *args, &block)
-#     #         end
-#     # CODE
-#     # eval not supported on Opal
-#     method_name = method
-#     definition_target.class_eval do
-#       define_method(method_name) do |*args, &block|
-#         $stdout.puts "method #{method_name} called!"
-#         m = self.send(:mocha)
-#         $stdout.puts "got mocha #{m} from #{self}"
-#         m.method_missing(method_name, *args, &block)
-#       end
-#     end
-#     if @original_visibility
-#       Module.instance_method(@original_visibility).bind(definition_target).call(method_name)
-#     end
-#   end
-# end
+
+class Mocha::ClassMethod
+  def define_new_method
+    # definition_target.class_eval(<<-CODE, __FILE__, __LINE__ + 1)
+    #         def #{method}(*args, &block)
+    #           mocha.method_missing(:#{method}, *args, &block)
+    #         end
+    # CODE
+    # eval not supported on Opal
+    method_name = method
+    definition_target.class_eval do
+      define_method(method_name) do |*args, &block|
+        m = self.send(:mocha)
+        m.method_missing(method_name, *args, &block)
+      end
+    end
+    if @original_visibility
+      Module.instance_method(@original_visibility).bind(definition_target).call(method_name)
+    end
+  end
+
+  # alias_method :==, :eql? was causing problems so using this for now
+  def ==(other)
+    self.__id__ == other.__id__
+  end
+end
 
 RSpec.configure do |config|
   config.mock_framework = :mocha
 
   config.include DeclarationMatchers
-  # FactoryGirl::StrategyCalculator when a symbol returns the strategy found - the mocha mock issue
+  #config.full_description = 'FactoryGirl::StrategyCalculator when a symbol returns the strategy found'
   #config.full_description = 'FactoryGirl::Factory factory name with underscores human_names'
 
   config.after do
