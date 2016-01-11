@@ -1,6 +1,6 @@
 module TestHelper
   def self.use_opal_gems
-    %w(mocha rspec-its).each { |gem| Opal.use_gem gem }
+    %w(mocha rspec-its bourne).each { |gem| Opal.use_gem gem }
   end
 
   def self.get_test_files
