@@ -10,9 +10,15 @@ module DefineConstantMacros
     model.class_eval do
       columns.each do |column_name, type|
         if type == :boolean
-          define_method("#{column_name}?") { self.send(column_name)}
+          define_method("#{column_name}?") { self.send(column_name) }
         end
         attr_accessor column_name
+      end
+
+      def initialize(attr_hash={})
+        attr_hash.each do |k, v|
+          self.instance_variable_set("@#{k}".to_sym, v)
+        end
       end
     end
     # create_table(model.table_name) do |table|
