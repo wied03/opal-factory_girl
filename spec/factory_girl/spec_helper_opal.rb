@@ -48,6 +48,10 @@ class Boolean
   def false?
     !self
   end
+
+  def true?
+    !false?
+  end
 end
 
 class Mocha::ClassMethod
