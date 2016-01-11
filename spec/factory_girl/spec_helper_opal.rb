@@ -24,6 +24,10 @@ module DefineConstantMacros
           write_attribute k, v
         end
       end
+
+      def persisted?
+        false
+      end
     end
     # create_table(model.table_name) do |table|
     #   columns.each do |column_name, type|
@@ -37,6 +41,13 @@ end
 # Mocha uses protected methods
 module Kernel
   alias protected_methods methods
+  alias public_method method
+end
+
+class Boolean
+  def false?
+    !self
+  end
 end
 
 class Mocha::ClassMethod
@@ -62,6 +73,38 @@ class Mocha::ClassMethod
   # alias_method :==, :eql? was causing an infinite loop in Opal's == method, so using this for now
   def ==(other)
     self.__id__ == other.__id__
+  end
+end
+
+class Mocha::Expectation
+  def mocha_inspect
+    message = "#{@cardinality.mocha_inspect}, "
+    # opal string mutation
+    message += case @invocation_count
+               when 0 then
+                 "not yet invoked"
+               when 1 then
+                 "invoked once"
+               when 2 then
+                 "invoked twice"
+               else
+                 "invoked #{@invocation_count} times"
+               end
+    message += ": "
+    message += method_signature
+    message += "; #{@ordering_constraints.map { |oc| oc.mocha_inspect }.join("; ")}" unless @ordering_constraints.empty?
+    message
+  end
+end
+
+class Mocha::API::HaveReceived
+  def failure_message
+    message = ""
+    if matching_stubs.empty?
+      # opal string mutation
+      message += "unstubbed, "
+    end
+    message + @expectation.mocha_inspect
   end
 end
 
