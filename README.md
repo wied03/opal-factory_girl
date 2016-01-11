@@ -46,6 +46,8 @@ You will need to `require` all of your factory files before using the factories 
 ## Limitations:
 
 * ActiveRecord support is not yet tested (thus you can't use the create strategy)
+* ActiveSupport::Instrumentation is not tested
+* automatic population of `created_at` is not tested since it uses time zone features
 
 ## Contributing
 
