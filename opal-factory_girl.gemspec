@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-# Not using use_gem because we don't want the RSpec dependencies rspec_junit_formatter has
 $: << File.expand_path('../factory_girl/lib', __FILE__)
 require File.expand_path('../lib/opal/factory_girl/version', __FILE__)
 
@@ -8,9 +7,9 @@ Gem::Specification.new do |s|
   s.version = Opal::FactoryGirl::VERSION
   s.author = 'Brady Wied'
   s.email = 'brady@bswtechconsulting.com'
-  s.summary = 'Allows command line control over Opal-RSpec formatters'
-  s.description = 'Allows controlling what formatter the opal-rspec Rake task uses, includes JUnit and TeamCity formtter patches'
-  s.homepage = 'https://github.com/wied03/opal-rspec-formatter'
+  s.summary = 'Opal compatible FactoryGirl'
+  s.description = 'Makes necessary patches to FactoryGirl such that it runs on Opal, with some limitations'
+  s.homepage = 'https://github.com/wied03/opal-factory_girl'
 
   s.files = Dir.glob('lib/**/*.rb') + Dir.glob('opal/**/*.rb') + Dir.glob('factory_girl/lib/**/*.rb')
 
