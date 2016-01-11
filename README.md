@@ -49,6 +49,7 @@ You will need to `require` all of your factory files before using the factories 
 * ActiveSupport::Instrumentation is not tested
 * Automatic population of `created_at` is not tested since it uses time zone features
 * Modifying existing factories with `FactoryGirl.modify` does not work
+* When specifying the class for a new factory, use the class, not a string representing the class
 
 ## Contributing
 
