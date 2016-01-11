@@ -15,6 +15,10 @@ module DefineConstantMacros
         attr_accessor column_name
       end
 
+      def read_attribute(attr)
+        self.instance_variable_get("@#{attr}".to_sym)
+      end
+
       def write_attribute(attr, value)
         self.instance_variable_set("@#{attr}".to_sym, value)
       end
