@@ -46,7 +46,7 @@ class Mocha::ClassMethod
     end
   end
 
-  # alias_method :==, :eql? was causing problems so using this for now
+  # alias_method :==, :eql? was causing an infinite loop in Opal's == method, so using this for now
   def ==(other)
     self.__id__ == other.__id__
   end
