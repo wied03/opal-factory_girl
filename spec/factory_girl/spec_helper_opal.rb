@@ -8,7 +8,10 @@ module DefineConstantMacros
   def define_model(name, columns = {}, &block)
     model = define_class(name, ActiveRecord::Base, &block)
     model.class_eval do
-      columns.each do |column_name, _|
+      columns.each do |column_name, type|
+        if type == :boolean
+          define_method("#{column_name}?") { self.send(column_name)}
+        end
         attr_accessor column_name
       end
     end
