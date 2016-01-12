@@ -2,7 +2,7 @@
 
 [![Build Status](http://img.shields.io/travis/wied03/opal-factory_girl/master.svg?style=flat)](http://travis-ci.org/wied03/opal-factory_girl)
 
-Get [Factory Girl](https://github.com/thoughtbot/factory_girl/) working on Opal (sans ActiveRecord support). Still a work in progress.
+Allows the basics of [Factory Girl](https://github.com/thoughtbot/factory_girl/) to work on Opal.
 
 ## Usage
 
@@ -47,7 +47,7 @@ You will need to `require` all of your factory files before using the factories 
 
 * ActiveRecord support is not yet tested (thus you can't use the create strategy)
 * ActiveSupport::Instrumentation is not tested
-* Automatic population of `created_at` is not tested since it uses time zone features
+* Automatic population of `created_at` attributes is not tested since it uses time zone features
 * Modifying existing factories with `FactoryGirl.modify` does not work
 * When specifying the class for a new factory, use the class, not a string representing the class
 
@@ -65,7 +65,7 @@ A simple rake task should run the example specs in `spec/`:
 
 Authors: Brady Wied
 
-Copyright (c) 2015, BSW Technology Consulting LLC
+Copyright (c) 2016, BSW Technology Consulting LLC
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
