@@ -1,4 +1,5 @@
 [
+    'mutex_m',
     'jruby/synchronized',
     'monitor',
     'thread_safe/jruby_cache_backend',
